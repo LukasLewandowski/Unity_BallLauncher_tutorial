@@ -5,9 +5,14 @@ using UnityEngine.InputSystem;
 
 public class BallHandler : MonoBehaviour
 {
-    [SerializeField] private Rigidbody2D currentBallRigidbody;
-    [SerializeField] private SpringJoint2D currentBallSpringJoint;
-    [SerializeField] private float delayDuration;
+    [SerializeField] private GameObject ballPrefab;
+    [SerializeField] private Rigidbody2D pivot;
+    [SerializeField] private float respawnDelay;
+    [SerializeField] private float detachDelay;
+
+    private Rigidbody2D currentBallRigidbody;
+    private SpringJoint2D currentBallSpringJoint;
+
     private Camera mainCamera;
     private bool isBallDragged;
 
@@ -15,6 +20,7 @@ public class BallHandler : MonoBehaviour
     void Start()
     {
         mainCamera = Camera.main;
+        SpawnBall();
     }
 
     // Update is called once per frame
@@ -41,14 +47,26 @@ public class BallHandler : MonoBehaviour
         currentBallRigidbody.position = worldPosition;
     }
 
+    private void SpawnBall() {
+        GameObject ballInstance = Instantiate(ballPrefab, pivot.position, Quaternion.identity);
+        currentBallRigidbody = ballInstance.GetComponent<Rigidbody2D>();
+        currentBallSpringJoint = ballInstance.GetComponent<SpringJoint2D>();
+
+        // attach the ball to pivot
+        currentBallSpringJoint.connectedBody = pivot;
+    }
+
     private void LaunchBall() {
         currentBallRigidbody.isKinematic = false;
         currentBallRigidbody = null;
-        Invoke(nameof(DetachBall), delayDuration);
+        Invoke(nameof(DetachBall), detachDelay);
     }
 
     private void DetachBall() {
         currentBallSpringJoint.enabled = false;
         currentBallSpringJoint = null;
+
+        // respawn ball
+        Invoke(nameof(SpawnBall), respawnDelay);
     }
 }

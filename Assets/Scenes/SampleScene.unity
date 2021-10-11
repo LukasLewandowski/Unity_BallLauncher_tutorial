@@ -1022,9 +1022,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdc616450cc1940e4b3e1da65bb561f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentBallRigidbody: {fileID: 0}
-  currentBallSpringJoint: {fileID: 0}
-  delayDuration: 0.16
+  ballPrefab: {fileID: 8626370840309925283, guid: 2f11935ac48054c658c71e477353824e, type: 3}
+  pivot: {fileID: 773517553}
+  respawnDelay: 1
+  detachDelay: 0.16
 --- !u!1 &1845046898
 GameObject:
   m_ObjectHideFlags: 0
